@@ -1,0 +1,26 @@
+[efficientDet]
+
+[efficientNet]
+풀고자하는 것은 정확도와 효율성을 높히자는 목적으로 논문을 써냄
+여기서 3차원을 2차원으로 세로 방향이 w x h, 가로방향을 채널 로 표현한다. 즉 width = number of channel
+
+resolution을 키우려면 그에 맞게 depth와 width를 키워야 한다.
+
+알베감마를 찾기 위해 베이스라인 넷을 만들때 MNasNet을 비슷하게 사용해서 만들었다.
+하지만 NasNet에서 Latency가 들어있는데 여기서는 안 들어있음 > 특별한 디바이스를 타겟해서 구축하느게 아니기 때문이다.
+
+구조에서 conv는 mobileNet2에서 사용하는 모듈 conv를 사용함 즉, baseline network는 MobileNet2에서 사용한 방법과 동일하다.
+그렇게 파이를 1로 설정 했을떄 알=1.2 베=1.1, 감=1.15가 나왔다. 큰 차이는 없다 그리고 알베감의 값을 고정시키고 파이 값만 변경해서 b1 부터 b7까지 구현함
+
+mnasnet을 썻던 fomulation해서 effinet에서 사용했다.
+b7일 경우라고 해도 파이가 7승이 되는건 아니다? = 채널이랑 댑스 레솔루션을 감안하면 약간의 파이값이 조정이 된다 그래서 7까지는 아니고 약간이 변동이 된다.
+
+resolution의 경우 cifar10은 강제로 스케일을 키워서 넣어 주었다. 댑스는 레이어를 늘리는 거니까 베이스라인에 따라서 갯수만 조절하는 방식이라고 생각하면됨 기본 블럭은 유지함
+ 
+
+이해 안 되면
+참고하면 도움 되는 논문들 
+1. Google AI Blog [ https://ai.googleblog.com/2019/05/efficientnet-improving-accuracy-and.html ]  >> effi net 요약정리 되어있는 블로그
+2. Hoya012's Research Blog  [ https://hoya012.github.io/blog/EfficientDet-Review/ ] >> effi net 정리 되어있는 블로그
+3. PR12 - EfficientNet(PR-169)  [ https://www.youtube.com/watch?v=Vhz0quyvR7I ]
+4. PR12 - NAS-FPN (PR-166)  [ https://www.youtube.com/watch?v=FAAt0jejWOA ]  >>

@@ -1,0 +1,27 @@
+SSD 간단 정리
+
+faster R-CNN의 속도문제와 YOLO의 정확도 문제의 단점을 보완
+
+네트웍 구조는 vgg 16 으로 잡고, 중간중간의 feature map을 활용해서 bb와 classification을 예측한다. bb(8732 per class)개 뽑아낸다. 기존의 yolo는 bb 98개만 사용.
+claasifier: conv(3x3x(6x(classes+4)))  6:box개수 즉, 채널의 갯수는 6x(classes+4)가 된다. 예시를 들면 박스가 채널이 150이라고 하면 150 = 6x(21+4) 가 된다 여기서 클래스의 갯수가 21개인이유는 
+백그라운드로 박스를 하나두기 위해서 이다(아무물체가 없는 곳에 쳐지는 박스를 막기위해서 이다.)
+
+여기서 생기는 문제는 박스 크기는 같지만 (feature맵이 작아지므로) 앞쪽 feature맵
+에서는 비교적 작은물체를 뒤쪽에 feature map에서는 비교적 큰 물체를 예측하게 된다.
+->multiple convolutional maps to deal with different scales
+
+중간중간 feature map에서 예측을 계속하다보니 당연히 예측bb가 많아지고 결국
+imbalance가 생김(background의 정보를 너무 많이 가지고 있음)
+yolo에서는 마지막에 한번 딱 예측만 하기때문에 괜찮고(하지만 이래서 정확도가 떨어짐)
+faster rcnn에서는 rpn으로 한번 걸러줌으로써 해결 
+SSD는 Hard Negetive Mining을 사용( the highest con loss를 나열해서 가장 작은 애들을 박스 쳐낸다. 잘 못 맞춘 애들만 3배 사용해서 추출해냄 3:1 구조  )
+background인데 baground라고 쳐지지 않은 것들을 sort해서 그것을 positive example의
+3배만 사용하고 나머지는 버린다`
+
+SSD의 단점?
+작은물체를 잘 못찾는다 .
+왜? 작은물체는 앞쪽 feature map에서 찾는다고 했는데
+앞쪽feature맵은 아직 충분히 정보를 많이 가지고 있지 않기 때문에
+RetinaNet에서 이걸 보완함.
+
+참고 자료 [ https://www.youtube.com/watch?v=ej1ISEoAK5g ]

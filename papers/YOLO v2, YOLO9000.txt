@@ -1,0 +1,38 @@
+yolo9000은 object detection은 class 수가 매우적어서 이걸 classification의 data와 잘 joint 시켜보겠다.
+
+yolov2
+먼저 모델 개선 후 class를 늘려보자!
+
+batchnorm 추가해서 성능 2퍼올렸고 drop out 제거
+
+high resolution classifier -> imagenet 데이터 224*224를 finetuning 을 통해 10epoch 동안 
+448*448크기로 늘렸고 성능 4퍼 올림 
+-> 정확히는 416*416을 사용함 왜냐하면 나중에 pooling을 통해 사이즈가 작아지는데
+13x13같이 홀수로 만들어서 가운데 한개의 그리드셀로만 이미지를 예측하기 위함 (이미지는 보통 가운데에 있으므로)
+
+
+앵커박스 추가
+fc레이어 삭제
+
+모든 anchor에서 class와 objectness를 예측함
+
+
+학습을 통해 데이터셋에 맞는 앵커박스를 찾아보자!
+k-means clusturing 
+k=5로 정했음
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+yolo1의 단점 -> 정확도가 낮고 recall이 낮음(즉 물체를 잘 못찾음)
